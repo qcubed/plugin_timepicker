@@ -41,7 +41,8 @@
 	* @property string $DeselectButton Text for the deselect button
 	*/
 	namespace QCubed\Plugins;
-	use \QTextBox, \QType, \JavascriptHelper;
+	use \QTextBox, \QType, \JavascriptHelper, \QApplication, \QInvalidCastException,
+		\QJavaScriptAction, \QNoScriptAjaxAction, \QJsClosure, \QCallerException;
 	
 	class QTimepickerBoxGen extends QTextBox	{
 		/** @var boolean */
@@ -230,7 +231,7 @@
 		protected function getCustomEventPropertyName(QEvent $objEvent) {
 			$strEventClass = get_class($objEvent);
 			if (array_key_exists($strEventClass, QAutocomplete::$custom_events))
-				return QAutocomplete::$custom_events[$strEventClass];
+				return QTimepickerBox::$custom_events[$strEventClass];
 			return null;
 		}
 
