@@ -105,10 +105,13 @@
 		
 		public function __construct($objParentObject, $strDefaultAreaCode = null, $strControlId = null) {
 			parent::__construct($objParentObject, $strControlId);
-			
+			$this->registerFiles();
+		}
+
+		protected function registerFiles() {
 			$this->AddCssFile(__JQUERY_CSS__); // make sure they know 
-			$this->AddPluginJavascriptFile("QTimepicker", "jquery.ui.timepicker.js");
-			$this->AddPluginCssFile("QTimepicker", "jquery.ui.timepicker.css");
+			$this->AddPluginJavascriptFile("timepicker", "jquery.ui.timepicker.js");
+			$this->AddPluginCssFile("timepicker", "jquery.ui.timepicker.css");
 		}
 		
 		protected function makeJsProperty($strProp, $strKey) {
