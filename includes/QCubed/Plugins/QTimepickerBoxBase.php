@@ -7,6 +7,8 @@
 	*/
 	
 	namespace QCubed\Plugins;
+	
+	uses \QType;
 
 	class QTimepickerBoxBase extends QTimepickerBoxGen {
 
