@@ -10,7 +10,7 @@
 	
 	namespace QCubed\Plugins;
 
-	class QTimepicker extends QTimepickerBox {
+	class QTimepickerBox extends QTimepickerBoxBase {
 
 	}
 	
