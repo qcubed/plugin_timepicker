@@ -43,7 +43,7 @@
 	namespace QCubed\Plugins;
 	use \QTextBox, \QType, \JavascriptHelper;
 	
-	class QTimepickerBase extends QTextBox	{
+	class QTimepickerBoxGen extends QTextBox	{
 		/** @var boolean */
 		protected $blnDisabled = null;
 		/** @var string */
@@ -102,17 +102,6 @@
 		/** @var array $custom_events Event Class Name => Event Property Name */
 		protected static $custom_events = array(
 		);
-		
-		public function __construct($objParentObject, $strDefaultAreaCode = null, $strControlId = null) {
-			parent::__construct($objParentObject, $strControlId);
-			$this->registerFiles();
-		}
-
-		protected function registerFiles() {
-			$this->AddCssFile(__JQUERY_CSS__); // make sure they know 
-			$this->AddPluginJavascriptFile("timepicker", "jquery.ui.timepicker.js");
-			$this->AddPluginCssFile("timepicker", "jquery.ui.timepicker.css");
-		}
 		
 		protected function makeJsProperty($strProp, $strKey) {
 			$objValue = $this->$strProp;
