@@ -1,7 +1,7 @@
 <?php
 	require('../../../framework/qcubed.inc.php');
 	
-	use QCubed\Plugins\QTimepickerBox;
+	use QCubed\Plugin\QTimepickerBox;
 
 	class SampleForm extends QForm {
 		protected $txtTimepicker1;

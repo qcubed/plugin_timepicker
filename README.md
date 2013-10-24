@@ -11,14 +11,14 @@ This control is installable by Composer. To install, add the following to the co
 	"repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/qcubed/QTimepicker"
+            "url": "https://github.com/qcubed/plugin_timepicker"
         }
     ],
 ```    
 and
 ```
 	"require": {
-		"qcubed/plugin/QTimepicker": "dev-master"
+		"qcubed/plugin/timepicker": "dev-master"
 	},
 
 ```
