@@ -40,7 +40,7 @@
 	* @property bool $ShowDeselectButton Shows the deselect time button
 	* @property string $DeselectButton Text for the deselect button
 	*/
-	namespace QCubed\Plugins;
+	namespace QCubed\Plugin;
 	use \QTextBox, \QType, \JavascriptHelper, \QApplication, \QInvalidCastException,
 		\QJavaScriptAction, \QNoScriptAjaxAction, \QJsClosure, \QCallerException;
 	

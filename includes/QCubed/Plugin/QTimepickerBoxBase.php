@@ -6,7 +6,7 @@
 	* and QCubed. Formatting is based on the current jQuery UI theme.
 	*/
 	
-	namespace QCubed\Plugins;
+	namespace QCubed\Plugin;
 	
 	use \QType, \QDateTime, \QCallerException, \QInvalidCastException;
 

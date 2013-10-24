@@ -8,7 +8,7 @@
 	* be overwritten by composer on the next update.
 	*/
 	
-	namespace QCubed\Plugins;
+	namespace QCubed\Plugin;
 
 	class QTimepickerBox extends QTimepickerBoxBase {
 

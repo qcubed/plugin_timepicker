@@ -18,7 +18,7 @@ This control is installable by Composer. To install, add the following to the co
 and
 ```
 	"require": {
-		"qcubed/plugins/QTimepicker": "dev-master"
+		"qcubed/plugin/QTimepicker": "dev-master"
 	},
 
 ```
