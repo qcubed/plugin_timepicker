@@ -15,6 +15,8 @@
 
 	<p>Default: <?php $this->txtTimepicker1->Render(); ?></p>
 	<p>US Hours 15-min: <?php $this->txtTimepicker2->Render(); ?></p>
-			
-	<?php $this->RenderEnd(); ?>
+	<p>Date and Time Picker: <?php $this->txtTimepicker3->Render(); ?></p>
+
+
+<?php $this->RenderEnd(); ?>
 <?php require(__DOCROOT__ . __EXAMPLES__ . '/includes/footer.inc.php'); ?>

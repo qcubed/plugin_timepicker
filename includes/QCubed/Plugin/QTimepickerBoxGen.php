@@ -42,7 +42,8 @@
 	*/
 	namespace QCubed\Plugin;
 	use \QTextBox, \QType, \JavascriptHelper, \QApplication, \QInvalidCastException,
-		\QJavaScriptAction, \QNoScriptAjaxAction, \QJsClosure, \QCallerException;
+		\QJavaScriptAction, \QNoScriptAjaxAction, \QJsClosure, \QCallerException,
+		\QEvent;
 	
 	class QTimepickerBoxGen extends QTextBox	{
 		/** @var boolean */
@@ -230,7 +231,7 @@
 		 */
 		protected function getCustomEventPropertyName(QEvent $objEvent) {
 			$strEventClass = get_class($objEvent);
-			if (array_key_exists($strEventClass, QAutocomplete::$custom_events))
+			if (array_key_exists($strEventClass, QTimepickerBox::$custom_events))
 				return QTimepickerBox::$custom_events[$strEventClass];
 			return null;
 		}

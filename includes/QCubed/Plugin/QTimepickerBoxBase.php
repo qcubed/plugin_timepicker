@@ -130,7 +130,11 @@
 				case 'DateTime':
 					try {
 						$dtt = QType::Cast($mixValue, QType::DateTime);
-						$this->Text = $dtt->__toString ("h:mm z");
+						if ($dtt) {
+							$this->Text = $dtt->qFormat ("h:mm z");
+						} else {
+							$this->Text = '';
+						}
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
