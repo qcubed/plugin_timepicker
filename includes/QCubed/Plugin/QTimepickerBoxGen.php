@@ -563,6 +563,35 @@
 					}
 			}
 		}
+
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'Disabled', 'Disable this control. Default: false', QType::Boolean),
+				new QMetaParam (get_called_class(), 'Button', 'Name of the button to popup the control. Default: none', QType::String),
+				new QMetaParam (get_called_class(), 'TimeSeparator', 'The character to use to separate hours and minutes. Default: : (colon)', QType::String),
+				new QMetaParam (get_called_class(), 'ShowPeriod', 'Whether to display the period. Default: true', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ShowPeriodLabels', 'Whether to display the period labels. Default: true', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ShowLeadingZero', 'Whether to display leading zeros in the hour numbers. Default: true', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ShowMinutesLeadingZero', 'Whether to display leading zeros in the minutes numbers. Default: true', QType::Boolean),
+				new QMetaParam (get_called_class(), 'PeriodSeparator', 'What character to use to separate the periods. Default: (space)', QType::String),
+				new QMetaParam (get_called_class(), 'AltField', 'Selector for an alternate field to store the time into. Default: none', QType::String),
+				new QMetaParam (get_called_class(), 'DefaultTime', 'The default time value. Default: now. Default: now', QType::String),
+				new QMetaParam (get_called_class(), 'ShowOn', 'Whether to show on focus, or wait for a button click. Default: focus', QType::ArrayType, ['Focus'=>'focus', 'Button'=>'button']),
+				new QMetaParam (get_called_class(), 'HourText', 'Text to use for the hour label. Default: Hour', QType::String),
+				new QMetaParam (get_called_class(), 'MinuteText', 'Text to use for the minute label. Default: Minute', QType::String),
+				new QMetaParam (get_called_class(), 'AmPmText', 'Text to use to display Am and Pm. Must be separated by commas, as in "AM, PM"', QType::ArrayType),
+				new QMetaParam (get_called_class(), 'MyPosition', 'Position of the dialog relative to the input. Defaults to "left top"', QType::String),
+				new QMetaParam (get_called_class(), 'AtPosition', 'Position of the element to attach to. Defaults to "left bottom"', QType::String),
+				new QMetaParam (get_called_class(), 'HoursArray', 'First and last displayed hours', QType::String),
+				new QMetaParam (get_called_class(), 'MinutesArray', 'Start, end and interval', QType::String),
+				new QMetaParam (get_called_class(), 'Rows', 'Number of rows to display', QType::Integer),
+				new QMetaParam (get_called_class(), 'ShowHours', 'False to hide the hours display', QType::Boolean),
+				new QMetaParam (get_called_class(), 'ShowMinutes', 'False to hide the minutes display.', QType::Integer),
+				new QMetaParam (get_called_class(), 'Rows', 'Number of rows to display', QType::Integer),
+				new QMetaParam (get_called_class(), 'Rows', 'Number of rows to display', QType::Integer)
+			));
+		}
+
 	}
 
 ?>

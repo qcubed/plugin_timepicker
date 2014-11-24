@@ -158,7 +158,14 @@
 					}
 					break;
 			}
-		}		
+		}
+
+		public static function GetMetaParams() {
+			return array_merge(parent::GetMetaParams(), array(
+				new QMetaParam (get_called_class(), 'LabelForInvalid', 'What to display if an invalid time is entered.', QType::String)
+			));
+		}
+
 	}
 	
 	
