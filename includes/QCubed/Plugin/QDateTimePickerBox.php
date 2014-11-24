@@ -175,12 +175,10 @@ class QDateTimePickerBox extends QControl {
 	 * @return string
 	 */
 	public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-		$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
-		$strClassName = $objTable->ClassName;
-		$strControlVarName = $objCodeGen->FormControlVariableNameForColumn($objColumn);
-		$strLabelName = addslashes(QCodeGen::MetaControlLabelNameFromColumn($objColumn));
+		$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
+		$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));
 
-		$strControlType = $objCodeGen->FormControlClassForColumn($objColumn);
+		$strControlType = $objCodeGen->MetaControlControlClass($objColumn);
 
 		$strRet = <<<TMPL
 		/**
@@ -222,7 +220,7 @@ TMPL;
 TMPL;
 		}
 
-		$strRet .= static::Codegen_MetaCreateOptions ($objColumn);
+		$strRet .= static::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
 
 		$strRet .= <<<TMPL
 			return \$this->{$strControlVarName};
@@ -244,8 +242,8 @@ TMPL;
 	 * @return string
 	 */
 	public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
-		$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
-		$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+		$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
+		$strPropName = $objCodeGen->MetaControlPropertyName($objColumn);
 		$strControlVarName = static::Codegen_VarName($strPropName);
 
 		if ($blnInit) {
@@ -258,8 +256,8 @@ TMPL;
 
 
 	public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-		$strObjectName = $objCodeGen->VariableNameFromTable($objTable->Name);
-		$strPropName = $objColumn->Reference ? $objColumn->Reference->PropertyName : $objColumn->PropertyName;
+		$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
+		$strPropName = $objCodeGen->MetaControlPropertyName($objColumn);
 		$strControlVarName = static::Codegen_VarName($strPropName);
 		$strRet = <<<TMPL
 				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$objColumn->PropertyName} = \$this->{$strControlVarName}->DateTime;
