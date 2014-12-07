@@ -7,7 +7,7 @@
 	*/
 	
 	namespace QCubed\Plugin;
-	
+
 	use \QType, \QDateTime, \QCallerException, \QInvalidCastException;
 
 	class QTimepickerBoxBase extends QTimepickerBoxGen {
