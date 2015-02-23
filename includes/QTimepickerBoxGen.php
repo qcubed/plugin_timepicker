@@ -105,174 +105,99 @@
 		protected static $custom_events = array(
 		);
 		
-		protected function makeJsProperty($strProp, $strKey) {
-			$objValue = $this->$strProp;
-			if (null === $objValue) {
-				return '';
-			}
-
-			return $strKey . ': ' . JavaScriptHelper::toJsObject($objValue) . ', ';
-		}
-
 		protected function makeJqOptions() {
-			$strJqOptions = '';
-			$strJqOptions .= $this->makeJsProperty('Button', 'button');
-			$strJqOptions .= $this->makeJsProperty('TimeSeperator', 'timeSeperator');
-			$strJqOptions .= $this->makeJsProperty('ShowPeriod', 'showPeriod');
-			$strJqOptions .= $this->makeJsProperty('ShowPeriodLabels', 'showPeriodLabels');
-			$strJqOptions .= $this->makeJsProperty('ShowLeadingZero', 'showLeadingZero');
-			$strJqOptions .= $this->makeJsProperty('ShowMinutesLeadingZero', 'showMinutesLeadingZero');
-			$strJqOptions .= $this->makeJsProperty('PeriodSeparator', 'periodSeparator');
-			$strJqOptions .= $this->makeJsProperty('AltField', 'altField');
-			$strJqOptions .= $this->makeJsProperty('DefaultTime', 'defaultTime'); 
-			$strJqOptions .= $this->makeJsProperty('ShowOn', 'showOn'); 
-			$strJqOptions .= $this->makeJsProperty('HourText', 'hourText');
-			$strJqOptions .= $this->makeJsProperty('MinuteText', 'minuteText');
-			$strJqOptions .= $this->makeJsProperty('AmPmText', 'amPmText');
-			$strJqOptions .= $this->makeJsProperty('MyPosition', 'myPosition');
-			$strJqOptions .= $this->makeJsProperty('AtPosition', 'atPosition');
-			$strJqOptions .= $this->makeJsProperty('HoursArray', 'hours');
-			$strJqOptions .= $this->makeJsProperty('MinutesArray', 'minutes');
-			$strJqOptions .= $this->makeJsProperty('Rows', 'rows');
-			$strJqOptions .= $this->makeJsProperty('ShowHours', 'showHours');
-			$strJqOptions .= $this->makeJsProperty('ShowMinutes', 'showMinutes');
-			$strJqOptions .= $this->makeJsProperty('ShowCloseButton', 'showCloseButton');
-			$strJqOptions .= $this->makeJsProperty('CloseButtonText', 'closeButtonText');
-			$strJqOptions .= $this->makeJsProperty('ShowNowButton', 'showNowButton');
-			$strJqOptions .= $this->makeJsProperty('NowButtonText', 'nowButtonText');
-			$strJqOptions .= $this->makeJsProperty('ShowDeselectButton', 'showDeselectButton');
-			$strJqOptions .= $this->makeJsProperty('DeselectButtonText', 'deselectButtonText');
-
-			if ($strJqOptions) $strJqOptions = substr($strJqOptions, 0, -2);
-			return $strJqOptions;
+			$jqOptions = null;
+			if (!is_null($val = $this->Button)) {$jqOptions['button'] = $val;}
+			if (!is_null($val = $this->TimeSeperator)) {$jqOptions['timeSeperator'] = $val;}
+			if (!is_null($val = $this->ShowPeriod)) {$jqOptions['showPeriod'] = $val;}
+			if (!is_null($val = $this->ShowPeriodLabels)) {$jqOptions['showPeriodLabels'] = $val;}
+			if (!is_null($val = $this->ShowLeadingZero)) {$jqOptions['showLeadingZero'] = $val;}
+			if (!is_null($val = $this->ShowMinutesLeadingZero)) {$jqOptions['showMinutesLeadingZero'] = $val;}
+			if (!is_null($val = $this->PeriodSeparator)) {$jqOptions['periodSeparator'] = $val;}
+			if (!is_null($val = $this->AltField)) {$jqOptions['altField'] = $val;}
+			if (!is_null($val = $this->DefaultTime)) {$jqOptions['defaultTime'] = $val;}
+			if (!is_null($val = $this->ShowOn)) {$jqOptions['showOn'] = $val;}
+			if (!is_null($val = $this->HourText)) {$jqOptions['hourText'] = $val;}
+			if (!is_null($val = $this->MinuteText)) {$jqOptions['minuteText'] = $val;}
+			if (!is_null($val = $this->AmPmText)) {$jqOptions['amPmText'] = $val;}
+			if (!is_null($val = $this->MyPosition)) {$jqOptions['myPosition'] = $val;}
+			if (!is_null($val = $this->AtPosition)) {$jqOptions['atPosition'] = $val;}
+			if (!is_null($val = $this->HoursArray)) {$jqOptions['hours'] = $val;}
+			if (!is_null($val = $this->MinutesArray)) {$jqOptions['minutes'] = $val;}
+			if (!is_null($val = $this->Rows)) {$jqOptions['rows'] = $val;}
+			if (!is_null($val = $this->ShowHours)) {$jqOptions['showHours'] = $val;}
+			if (!is_null($val = $this->ShowMinutes)) {$jqOptions['showMinutes'] = $val;}
+			if (!is_null($val = $this->ShowCloseButton)) {$jqOptions['showCloseButton'] = $val;}
+			if (!is_null($val = $this->CloseButtonText)) {$jqOptions['closeButtonText'] = $val;}
+			if (!is_null($val = $this->ShowNowButton)) {$jqOptions['showNowButton'] = $val;}
+			if (!is_null($val = $this->NowButtonText)) {$jqOptions['nowButtonText'] = $val;}
+			if (!is_null($val = $this->ShowDeselectButton)) {$jqOptions['showDeselectButton'] = $val;}
+			if (!is_null($val = $this->DeselectButtonText)) {$jqOptions['deselectButtonText'] = $val;}
+			return $jqOptions;
 		}
 
 		protected function getJqSetupFunction() {
 			return 'timepicker';
 		}
 
-		public function GetControlJavaScript() {
-			return sprintf('jQuery("#%s").%s({%s})', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
-		}
-
 		public function GetEndScript() {
-			return  $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+			if ($this->getJqControlId() !== $this->ControlId) {
+				// If events are not attached to the actual object being drawn, then the old events will not get
+				// deleted. We delete the old events here. This code must happen before any other event processing code.
+				QApplication::ExecuteControlCommand($this->getJqControlId(), "off", QJsPriority::High);
+			}
+			$jqOptions = $this->makeJqOptions();
+			if (empty($jqOptions)) {
+				QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction());
+			}
+			else {
+				QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), $jqOptions);
+			}
+
+			return parent::GetEndScript();
 		}
 
 		/**
-		 * Call a JQuery UI Method on the object.
-		 * 
-		 * @param string $strMethodName the method name to call
-		 * @param mixed[optional] $mixParam1 
-		 * @param mixed[optional] $mixParam2 
-		 */
-		public function CallJqUiMethod($strMethodName, $mixParam1 = null, $mixParam2 = null) {
-			$args = array();
-			$args[] = $strMethodName;
-			if ($mixParam1) {
-				$args[] = $mixParam1;
-			}
-			if ($mixParam2) {
-				$args[] = $mixParam2;
-			}
-
-			$strArgs = JavaScriptHelper::toJsObject($args);
-			$strJs = sprintf('jQuery("#%s").%s(%s)', 
-				$this->getJqControlId(),
-				$this->getJqSetupFunction(),
-				substr($strArgs, 1, strlen($strArgs)-2));	// params without brackets
-			QApplication::ExecuteJavaScript($strJs);
-		}
-		
-		/**
-		 * Remove the autocomplete functionality completely. This will return the
+		 * Remove the timepicker functionality completely. This will return the
 		 * element back to its pre-init state.
 		 */
 		public function Destroy() {
-			$this->CallJqUiMethod ('destroy');
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "destroy", QJsPriority::Low);
 		}
 
 		/**
-		 * Disable the autocomplete.
+		 * Disable the widget.
 		 */
 		public function Disable() {
-			$this->CallJqUiMethod ('disable');
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "disable", QJsPriority::Low);
 		}
 
 		/**
-		 * Enable the autocomplete.
+		 * Enable the widget.
 		 */
 		public function Enable() {
-			$this->CallJqUiMethod ('enable');
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "enable", QJsPriority::Low);
 		}
 
 		/**
-		 * Get or set any autocomplete option. If no value is specified, will act as a
-		 * getter.
+		 * Get or set any widget option.
 		 * @param $optionName
 		 * @param $value
 		 */
-		public function Option($optionName, $value = null) {
-			$this->CallJqUiMethod ('enable', $optionName, $value);
+		public function Option($optionName, $value) {
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $optionName, $value, QJsPriority::Low);
 		}
 
 		/**
-		 * Set multiple autocomplete options at once by providing an options object.
+		 * Set multiple options at once by providing an options object.
 		 * @param $options
 		 */
 		public function Options($options) {
-			$this->CallJqUiMethod ('enable', $options);
-		}
-
-		/**
-		 * returns the property name corresponding to the given custom event
-		 * @param QEvent $objEvent the custom event
-		 * @return the property name corresponding to $objEvent
-		 */
-		protected function getCustomEventPropertyName(QEvent $objEvent) {
-			$strEventClass = get_class($objEvent);
-			if (array_key_exists($strEventClass, QTimepickerBox::$custom_events))
-				return QTimepickerBox::$custom_events[$strEventClass];
-			return null;
-		}
-
-		/**
-		 * Wraps $objAction into an object (typically a QJsClosure) that can be assigned to the corresponding Event
-		 * property (e.g. OnFocus)
-		 * @param QEvent $objEvent
-		 * @param QAction $objAction
-		 * @return mixed the wrapped object
-		 */
-		protected function createEventWrapper(QEvent $objEvent, QAction $objAction) {
-			$objAction->Event = $objEvent;
-			return new QJsClosure($objAction->RenderScript($this));
-		}
-
-		/**
-		 * If $objEvent is one of the custom events (as determined by getCustomEventPropertyName() method)
-		 * the corresponding JQuery event is used and if needed a no-script action is added. Otherwise the normal
-		 * QCubed AddAction is performed.
-		 * @param QEvent  $objEvent
-		 * @param QAction $objAction
-		 */
-		public function AddAction($objEvent, $objAction) {
-			$strEventName = $this->getCustomEventPropertyName($objEvent);
-			if ($strEventName) {
-				$this->$strEventName = $this->createEventWrapper($objEvent, $objAction);
-				if ($objAction instanceof QAjaxAction) {
-					$objAction = new QNoScriptAjaxAction($objAction);
-					parent::AddAction($objEvent, $objAction);
-				} else if (!($objAction instanceof QJavaScriptAction)) {
-					throw new Exception('handling of "' . get_class($objAction) . '" actions with "' . get_class($objEvent) . '" events not yet implemented');
-				}
-			} else {
-				parent::AddAction($objEvent, $objAction);
-			}
+			QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), "option", $options, QJsPriority::Low);
 		}
 
 		public function __get($strName) {
 			switch ($strName) {
-				case 'Disabled': return $this->blnDisabled;
 				case 'Button': return $this->strButton;
 				case 'TimeSeperator': return $this->strTimeSeperator;
 				case 'ShowPeriod': return $this->blnShowPeriod;
@@ -310,21 +235,11 @@
 		}
 
 		public function __set($strName, $mixValue) {
-			$this->blnModified = true;
-
 			switch ($strName) {
-				case 'Disabled':
-					try {
-						$this->blnDisabled = QType::Cast($mixValue, QType::Boolean);
-						break;
-					} catch (QInvalidCastException $objExc) {
-						$objExc->IncrementOffset();
-						throw $objExc;
-					}
-					
 				case 'Button':
 					try {
 						$this->strButton = QType::Cast($mixValue, QType::String);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'button', $this->strButton);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -334,6 +249,7 @@
 				case 'TimeSeperator':
 					try {
 						$this->strTimeSeperator = QType::Cast($mixValue, QType::String);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'timeSeperator', $this->strTimeSeperator);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -343,6 +259,7 @@
 				case 'ShowPeriod':
 					try {
 						$this->blnShowPeriod = QType::Cast($mixValue, QType::Boolean);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'showPeriod', $this->blnShowPeriod);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -352,6 +269,7 @@
 				case 'ShowPeriodLabels':
 					try {
 						$this->blnShowPeriodLabels = QType::Cast($mixValue, QType::Boolean);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'showPeriodLabels', $this->blnShowPeriodLabels);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -361,6 +279,7 @@
 				case 'ShowLeadingZero':
 					try {
 						$this->blnShowLeadingZero = QType::Cast($mixValue, QType::Boolean);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'showLeadingZero', $this->blnShowLeadingZero);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -370,6 +289,7 @@
 				case 'ShowMinutesLeadingZero':
 					try {
 						$this->blnShowMinutesLeadingZero = QType::Cast($mixValue, QType::Boolean);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'showMinutesLeadingZero', $this->blnShowMinutesLeadingZero);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -378,6 +298,7 @@
 				case 'PeriodSeparator': 					
 					try {
 						$this->strPeriodSeparator = QType::Cast($mixValue, QType::String);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'periodSeparator', $this->strPeriodSeparator);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -386,14 +307,16 @@
 				case 'AltField': 
 					try {
 						$this->strAltField = QType::Cast($mixValue, QType::String);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'altField', $this->strAltField);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
 						throw $objExc;
 					}
-								case 'DefaultTime': 
+				case 'DefaultTime':
 					try {
 						$this->strDefaultTime = QType::Cast($mixValue, QType::String);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'defaultTime', $this->strDefaultTime);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -403,6 +326,7 @@
 				case 'ShowOn': 
 					try {
 						$this->strShowOn = QType::Cast($mixValue, QType::String);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'showOn', $this->strShowOn);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -412,6 +336,7 @@
 				case 'HourText': 
 					try {
 						$this->strHourText = QType::Cast($mixValue, QType::String);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'hourText', $this->strHourText);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -421,6 +346,7 @@
 				case 'MinuteText': 
 					try {
 						$this->strMinuteText = QType::Cast($mixValue, QType::String);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'minuteText', $this->strMinuteText);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -430,6 +356,7 @@
 				case 'AmPmText': 
 					try {
 						$this->strAmPmText = QType::Cast($mixValue, QType::String);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'amPmText', $this->strAmPmText);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -439,6 +366,7 @@
 				case 'MyPosition': 
 					try {
 						$this->strMyPosition = QType::Cast($mixValue, QType::String);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'myPosition', $this->strMyPosition);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -448,6 +376,7 @@
 				case 'AtPosition': 
 					try {
 						$this->strAtPosition = QType::Cast($mixValue, QType::String);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'atPosition', $this->strAtPosition);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -457,6 +386,7 @@
 				case 'HoursArray': 
 					try {
 						$this->mixHoursArray = QType::Cast($mixValue, QType::ArrayType);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'hours', $this->mixHoursArray);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -466,6 +396,7 @@
 				case 'MinutesArray': 
 					try {
 						$this->mixMinutesArray = QType::Cast($mixValue, QType::ArrayType);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'minutes', $this->mixMinutesArray);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -475,6 +406,7 @@
 				case 'Rows': 
 					try {
 						$this->intRows = QType::Cast($mixValue, QType::Integer);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'rows', $this->intRows);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -484,6 +416,7 @@
 				case 'ShowHours': 
 					try {
 						$this->blnShowHours = QType::Cast($mixValue, QType::Boolean);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'showHours', $this->blnShowHours);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -493,6 +426,7 @@
 				case 'ShowMinutes': 
 					try {
 						$this->blnShowMinutes = QType::Cast($mixValue, QType::Boolean);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'showMinutes', $this->blnShowMinutes);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -502,6 +436,7 @@
 				case 'ShowCloseButton': 
 					try {
 						$this->blnShowCloseButton = QType::Cast($mixValue, QType::Boolean);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'showCloseButton', $this->blnShowCloseButton);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -511,6 +446,7 @@
 				case 'CloseButtonText': 
 					try {
 						$this->strCloseButtonText = QType::Cast($mixValue, QType::String);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'closeButtonText', $this->strCloseButtonText);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -520,6 +456,7 @@
 				case 'ShowNowButton': 
 					try {
 						$this->blnShowNowButton = QType::Cast($mixValue, QType::Boolean);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'showNowButton', $this->blnShowNowButton);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -529,6 +466,7 @@
 				case 'NowButtonText': 
 					try {
 						$this->strNowButtonText = QType::Cast($mixValue, QType::String);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'nowButtonText', $this->strNowButtonText);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -538,6 +476,7 @@
 				case 'ShowDeselectButton': 
 					try {
 						$this->blnShowDeselectButton = QType::Cast($mixValue, QType::Boolean);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'showDeselectButton', $this->blnShowDeselectButton);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -547,6 +486,7 @@
 				case 'DeselectButtonText': 
 					try {
 						$this->strDeselectButtonText = QType::Cast($mixValue, QType::String);
+						$this->AddAttributeScript($this->getJqSetupFunction(), 'option', 'deselectButtonText', $this->strDeselectButtonText);
 						break;
 					} catch (QInvalidCastException $objExc) {
 						$objExc->IncrementOffset();
@@ -564,31 +504,38 @@
 			}
 		}
 
-		public static function GetMetaParams() {
-			return array_merge(parent::GetMetaParams(), array(
-				new QMetaParam (get_called_class(), 'Disabled', 'Disable this control. Default: false', QType::Boolean),
-				new QMetaParam (get_called_class(), 'Button', 'Name of the button to popup the control. Default: none', QType::String),
-				new QMetaParam (get_called_class(), 'TimeSeparator', 'The character to use to separate hours and minutes. Default: : (colon)', QType::String),
-				new QMetaParam (get_called_class(), 'ShowPeriod', 'Whether to display the period. Default: true', QType::Boolean),
-				new QMetaParam (get_called_class(), 'ShowPeriodLabels', 'Whether to display the period labels. Default: true', QType::Boolean),
-				new QMetaParam (get_called_class(), 'ShowLeadingZero', 'Whether to display leading zeros in the hour numbers. Default: true', QType::Boolean),
-				new QMetaParam (get_called_class(), 'ShowMinutesLeadingZero', 'Whether to display leading zeros in the minutes numbers. Default: true', QType::Boolean),
-				new QMetaParam (get_called_class(), 'PeriodSeparator', 'What character to use to separate the periods. Default: (space)', QType::String),
-				new QMetaParam (get_called_class(), 'AltField', 'Selector for an alternate field to store the time into. Default: none', QType::String),
-				new QMetaParam (get_called_class(), 'DefaultTime', 'The default time value. Default: now. Default: now', QType::String),
-				new QMetaParam (get_called_class(), 'ShowOn', 'Whether to show on focus, or wait for a button click. Default: focus', QType::ArrayType, ['Focus'=>'focus', 'Button'=>'button']),
-				new QMetaParam (get_called_class(), 'HourText', 'Text to use for the hour label. Default: Hour', QType::String),
-				new QMetaParam (get_called_class(), 'MinuteText', 'Text to use for the minute label. Default: Minute', QType::String),
-				new QMetaParam (get_called_class(), 'AmPmText', 'Text to use to display Am and Pm. Must be separated by commas, as in "AM, PM"', QType::ArrayType),
-				new QMetaParam (get_called_class(), 'MyPosition', 'Position of the dialog relative to the input. Defaults to "left top"', QType::String),
-				new QMetaParam (get_called_class(), 'AtPosition', 'Position of the element to attach to. Defaults to "left bottom"', QType::String),
-				new QMetaParam (get_called_class(), 'HoursArray', 'First and last displayed hours', QType::String),
-				new QMetaParam (get_called_class(), 'MinutesArray', 'Start, end and interval', QType::String),
-				new QMetaParam (get_called_class(), 'Rows', 'Number of rows to display', QType::Integer),
-				new QMetaParam (get_called_class(), 'ShowHours', 'False to hide the hours display', QType::Boolean),
-				new QMetaParam (get_called_class(), 'ShowMinutes', 'False to hide the minutes display.', QType::Integer),
-				new QMetaParam (get_called_class(), 'Rows', 'Number of rows to display', QType::Integer),
-				new QMetaParam (get_called_class(), 'Rows', 'Number of rows to display', QType::Integer)
+		/**
+		 * Get an array of QModelConnectorParam types to use for displaying options in the ModelConnector dialog.
+		 * @return \QModelConnectorParam[]
+		 */
+		public static function GetModelConnectorParams() {
+			return array_merge(parent::GetModelConnectorParams(), array(
+				new QModelConnectorParam (get_called_class(), 'Button', 'Name of the button to popup the control. Default: none', QType::String),
+				new QModelConnectorParam (get_called_class(), 'TimeSeparator', 'The character to use to separate hours and minutes. Default: : (colon)', QType::String),
+				new QModelConnectorParam (get_called_class(), 'ShowPeriod', 'Whether to display the period. Default: true', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'ShowPeriodLabels', 'Whether to display the period labels. Default: true', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'ShowLeadingZero', 'Whether to display leading zeros in the hour numbers. Default: true', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'ShowMinutesLeadingZero', 'Whether to display leading zeros in the minutes numbers. Default: true', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'PeriodSeparator', 'What character to use to separate the periods. Default: (space)', QType::String),
+				new QModelConnectorParam (get_called_class(), 'AltField', 'Selector for an alternate field to store the time into. Default: none', QType::String),
+				new QModelConnectorParam (get_called_class(), 'DefaultTime', 'The default time value. Default: now. Default: now', QType::String),
+				new QModelConnectorParam (get_called_class(), 'ShowOn', 'Whether to show on focus, or wait for a button click. Default: focus', QType::ArrayType, ['Focus'=>'focus', 'Button'=>'button']),
+				new QModelConnectorParam (get_called_class(), 'HourText', 'Text to use for the hour label. Default: Hour', QType::String),
+				new QModelConnectorParam (get_called_class(), 'MinuteText', 'Text to use for the minute label. Default: Minute', QType::String),
+				new QModelConnectorParam (get_called_class(), 'AmPmText', 'Text to use to display Am and Pm. Must be separated by commas, as in "AM, PM"', QType::ArrayType),
+				new QModelConnectorParam (get_called_class(), 'MyPosition', 'Position of the dialog relative to the input. Defaults to "left top"', QType::String),
+				new QModelConnectorParam (get_called_class(), 'AtPosition', 'Position of the element to attach to. Defaults to "left bottom"', QType::String),
+				new QModelConnectorParam (get_called_class(), 'HoursArray', 'First and last displayed hours', QType::String),
+				new QModelConnectorParam (get_called_class(), 'MinutesArray', 'Start, end and interval', QType::String),
+				new QModelConnectorParam (get_called_class(), 'Rows', 'Number of rows to display', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'ShowHours', 'False to hide the hours display', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'ShowMinutes', 'False to hide the minutes display.', QType::Integer),
+				new QModelConnectorParam (get_called_class(), 'ShowCloseButton', 'False to hide the close button', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'CloseButtonText', 'Text to display on the close button', QType::String),
+				new QModelConnectorParam (get_called_class(), 'ShowNowButton', 'True to display the Now button', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'NowButtonText', 'Text to display on the now button', QType::String),
+				new QModelConnectorParam (get_called_class(), 'ShowDeselectButton', 'True to show the deselect button', QType::Boolean),
+				new QModelConnectorParam (get_called_class(), 'DeselectButtonText', 'Text to display on the deselect button', QType::String)
 			));
 		}
 
