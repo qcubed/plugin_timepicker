@@ -10,7 +10,7 @@
  */
 namespace QCubed\Plugin;
 
-use \QControl, \QDateTime, \QCallerException, \QType, \QDatepickerBox, \QCodeGen, \QTable, \QColumn;
+use \QControl, \QDateTime, \QCallerException, \QType, \QDatepickerBox, \QCodeGen, \QTable, \QColumn, \QHtml;
 
 class QDateTimePickerBox extends QControl {
 
@@ -60,16 +60,11 @@ class QDateTimePickerBox extends QControl {
 	 */
 	protected function GetControlHtml() {
 		// Lets get Style attributes
-		$strStyle = $this->GetStyleAttributes();
-		$strStyle = sprintf('style="%s;"', $strStyle);
-
-		$strAttributes = $this->GetAttributes(true, false);
-
 		$strDate = $this->datePicker->Render(false);
 		$strTime = $this->timePicker->Render(false);
 
-		// Let's render it out
-		return sprintf('<span id="%s" %s%s>%s%s</span>', $this->strControlId, $strStyle, $strAttributes, $strDate, $strTime);
+		return QHtml::RenderTag('span', $this->GetHtmlAttributes(), $strDate . $strTime);
+
 	}
 
 	/**
@@ -166,7 +161,7 @@ class QDateTimePickerBox extends QControl {
 	}
 
 	/**
-	 * Generate code that will be inserted into the MetaControl to connect a database object with this control.
+	 * Generate code that will be inserted into the ModelConnector to connect a database object with this control.
 	 * This is called during the codegen process.
 	 *
 	 * @param QCodeGen $objCodeGen
@@ -174,11 +169,11 @@ class QDateTimePickerBox extends QControl {
 	 * @param QColumn $objColumn
 	 * @return string
 	 */
-	public static function Codegen_MetaCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-		$strControlVarName = $objCodeGen->MetaControlVariableName($objColumn);
-		$strLabelName = addslashes(QCodeGen::MetaControlControlName($objColumn));
+	public static function Codegen_ConnectorCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
+		$strControlVarName = $objCodeGen->ModelConnectorVariableName($objColumn);
+		$strLabelName = addslashes(QCodeGen::ModelConnectorControlName($objColumn));
 
-		$strControlType = $objCodeGen->MetaControlControlClass($objColumn);
+		$strControlType = $objCodeGen->ModelConnectorControlClass($objColumn);
 
 		$strRet = <<<TMPL
 		/**
@@ -204,7 +199,7 @@ TMPL;
 			\$this->{$strControlVarName}->Name = QApplication::Translate('$strLabelName');
 
 TMPL;
-		$strRet .= static::Codegen_MetaRefresh($objCodeGen, $objTable, $objColumn, true);
+		$strRet .= static::Codegen_ConnectorRefresh($objCodeGen, $objTable, $objColumn, true);
 
 		if ($objColumn->NotNull) {
 			$strRet .=<<<TMPL
@@ -220,7 +215,7 @@ TMPL;
 TMPL;
 		}
 
-		$strRet .= static::Codegen_MetaCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
+		$strRet .= static::Codegen_ConnectorCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
 
 		$strRet .= <<<TMPL
 			return \$this->{$strControlVarName};
@@ -234,16 +229,16 @@ TMPL;
 	}
 
 	/**
-	 * Generate code to reload data from the MetaControl into this control.
-	 * @param QCodeGen $objCodeGen
-	 * @param QTable $objTable
-	 * @param QColumn $objColumn
-	 * @param boolean $blnInit Is initializing a new control verses loading a previously created control
+	 * Generate code to reload data from the ModelConnector into this control.
+	 * @param QDatabaseCodeGen 	$objCodeGen
+	 * @param QTable 			$objTable
+	 * @param QColumn 			$objColumn
+	 * @param boolean 			$blnInit Is initializing a new control verses loading a previously created control
 	 * @return string
 	 */
-	public static function Codegen_MetaRefresh(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
+	public static function Codegen_ConnectorRefresh(QDatabaseCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
 		$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
-		$strPropName = $objCodeGen->MetaControlPropertyName($objColumn);
+		$strPropName = $objCodeGen->ModelConnectorPropertyName($objColumn);
 		$strControlVarName = static::Codegen_VarName($strPropName);
 
 		if ($blnInit) {
@@ -255,9 +250,9 @@ TMPL;
 	}
 
 
-	public static function Codegen_MetaUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
+	public static function Codegen_ConnectorUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
 		$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
-		$strPropName = $objCodeGen->MetaControlPropertyName($objColumn);
+		$strPropName = $objCodeGen->ModelConnectorPropertyName($objColumn);
 		$strControlVarName = static::Codegen_VarName($strPropName);
 		$strRet = <<<TMPL
 				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$objColumn->PropertyName} = \$this->{$strControlVarName}->DateTime;

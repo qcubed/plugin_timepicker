@@ -160,9 +160,9 @@
 			}
 		}
 
-		public static function GetMetaParams() {
-			return array_merge(parent::GetMetaParams(), array(
-				new QMetaParam (get_called_class(), 'LabelForInvalid', 'What to display if an invalid time is entered.', QType::String)
+		public static function GetModelConnectorParams() {
+			return array_merge(parent::GetModelConnectorParams(), array(
+				new QModelConnectorParam (get_called_class(), 'LabelForInvalid', 'What to display if an invalid time is entered.', QType::String)
 			));
 		}
 
