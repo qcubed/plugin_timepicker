@@ -8,7 +8,7 @@
 	
 	namespace QCubed\Plugin;
 
-	use \QType, \QDateTime, \QCallerException, \QInvalidCastException;
+	use \QType, \QDateTime, \QCallerException, \QInvalidCastException, \QModelConnectorParam;
 
 	class QTimepickerBoxBase extends QTimepickerBoxGen {
 
@@ -80,7 +80,7 @@
 				if ($this->strText != "") {
 					$dttTest = self::ParseForTimeValue($this->strText);
 					if (!$dttTest) {
-						$this->strValidationError = $this->strLabelForInvalid;
+						$this->ValidationError = $this->strLabelForInvalid;
 						return false;
 					}
 				}
@@ -158,6 +158,10 @@
 					}
 					break;
 			}
+		}
+
+		public static function GetCodeGenerator () {
+			return new \QTextBox_CodeGenerator(get_class());
 		}
 
 		public static function GetModelConnectorParams() {

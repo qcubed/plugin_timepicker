@@ -41,9 +41,8 @@
 	* @property string $DeselectButton Text for the deselect button
 	*/
 	namespace QCubed\Plugin;
-	use \QTextBox, \QType, \JavascriptHelper, \QApplication, \QInvalidCastException,
-		\QJavaScriptAction, \QNoScriptAjaxAction, \QJsClosure, \QCallerException,
-		\QEvent;
+	use \QTextBox, \QType, \QApplication, \QInvalidCastException,
+		\QCallerException, \QModelConnectorParam;
 	
 	class QTimepickerBoxGen extends QTextBox	{
 		/** @var boolean */

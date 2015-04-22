@@ -48,7 +48,7 @@ class QDateTimePickerBox extends QControl {
 		$blnValid = ($blnValid1 && $blnValid2);
 
 		if (!$blnValid) {
-			$this->strValidationError = $this->datePicker->ValidationError . ' ' . $this->timePicker->ValidationError;
+			$this->ValidationError = $this->datePicker->ValidationError . ' ' . $this->timePicker->ValidationError;
 		}
 		return $blnValid;
 	}
@@ -156,109 +156,8 @@ class QDateTimePickerBox extends QControl {
 		}
 	}
 
-	public static function Codegen_VarName($strPropName) {
-		return 'dtt' . $strPropName;
-	}
-
-	/**
-	 * Generate code that will be inserted into the ModelConnector to connect a database object with this control.
-	 * This is called during the codegen process.
-	 *
-	 * @param QCodeGen $objCodeGen
-	 * @param QTable $objTable
-	 * @param QColumn $objColumn
-	 * @return string
-	 */
-	public static function Codegen_ConnectorCreate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-		$strControlVarName = $objCodeGen->ModelConnectorVariableName($objColumn);
-		$strLabelName = addslashes(QCodeGen::ModelConnectorControlName($objColumn));
-
-		$strControlType = $objCodeGen->ModelConnectorControlClass($objColumn);
-
-		$strRet = <<<TMPL
-		/**
-		 * Create and setup a $strControlType $strControlVarName
-		 * @param string \$strControlId optional ControlId to use
-		 * @return $strControlType
-		 */
-		public function {$strControlVarName}_Create(\$strControlId = null) {
-
-TMPL;
-		$strControlIdOverride = $objCodeGen->GenerateControlId($objTable, $objColumn);
-
-		if ($strControlIdOverride) {
-			$strRet .= <<<TMPL
-			if (!\$strControlId) {
-				\$strControlId = '$strControlIdOverride';
-			}
-
-TMPL;
-		}
-		$strRet .= <<<TMPL
-			\$this->{$strControlVarName} = new $strControlType(\$this->objParentObject, \$strControlId);
-			\$this->{$strControlVarName}->Name = QApplication::Translate('$strLabelName');
-
-TMPL;
-		$strRet .= static::Codegen_ConnectorRefresh($objCodeGen, $objTable, $objColumn, true);
-
-		if ($objColumn->NotNull) {
-			$strRet .=<<<TMPL
-			\$this->{$strControlVarName}->Required = true;
-
-TMPL;
-		}
-
-		if ($strMethod = QCodeGen::$PreferredRenderMethod) {
-			$strRet .= <<<TMPL
-			\$this->{$strControlVarName}->PreferredRenderMethod = '$strMethod';
-
-TMPL;
-		}
-
-		$strRet .= static::Codegen_ConnectorCreateOptions ($objCodeGen, $objTable, $objColumn, $strControlVarName);
-
-		$strRet .= <<<TMPL
-			return \$this->{$strControlVarName};
-		}
-
-
-TMPL;
-
-		return $strRet;
-
-	}
-
-	/**
-	 * Generate code to reload data from the ModelConnector into this control.
-	 * @param QDatabaseCodeGen 	$objCodeGen
-	 * @param QTable 			$objTable
-	 * @param QColumn 			$objColumn
-	 * @param boolean 			$blnInit Is initializing a new control verses loading a previously created control
-	 * @return string
-	 */
-	public static function Codegen_ConnectorRefresh(QDatabaseCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn, $blnInit = false) {
-		$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
-		$strPropName = $objCodeGen->ModelConnectorPropertyName($objColumn);
-		$strControlVarName = static::Codegen_VarName($strPropName);
-
-		if ($blnInit) {
-			$strRet = "\t\t\t\$this->{$strControlVarName}->DateTime = \$this->{$strObjectName}->{$strPropName};";
-		} else {
-			$strRet = "\t\t\tif (\$this->{$strControlVarName}) \$this->{$strControlVarName}->DateTime = \$this->{$strObjectName}->{$strPropName};";
-		}
-		return $strRet . "\n";
-	}
-
-
-	public static function Codegen_ConnectorUpdate(QCodeGen $objCodeGen, QTable $objTable, QColumn $objColumn) {
-		$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
-		$strPropName = $objCodeGen->ModelConnectorPropertyName($objColumn);
-		$strControlVarName = static::Codegen_VarName($strPropName);
-		$strRet = <<<TMPL
-				if (\$this->{$strControlVarName}) \$this->{$strObjectName}->{$objColumn->PropertyName} = \$this->{$strControlVarName}->DateTime;
-
-TMPL;
-		return $strRet;
+	public static function GetCodeGenerator () {
+		return new QDateTimePickerBox_CodeGenerator(get_class());
 	}
 
 
