@@ -1,11 +1,11 @@
 {
-    "name": "qcubed/plugin/timepicker",
+    "name": "qcubed/plugin_timepicker",
     "description": "QCubed wrapper for the jquery.ui.timepicker.js jQuery plugin.",
-    "type": "library",
+    "type": "qcubed-plugin",
     "keywords": ["qcubed", "time", "timepicker"],
     "license": "MIT",
     "require": {
-        "php": ">=5.3"
+        "php": ">=5.4"
     },
     "autoload": {
         "psr-4": { "QCubed\\Plugin\\": "includes/" }
