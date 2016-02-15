@@ -140,17 +140,21 @@
 		}
 
 		public function GetEndScript() {
-			if ($this->getJqControlId() !== $this->ControlId) {
-				// If events are not attached to the actual object being drawn, then the old events will not get
-				// deleted. We delete the old events here. This code must happen before any other event processing code.
-				QApplication::ExecuteControlCommand($this->getJqControlId(), "off", QJsPriority::High);
-			}
+			$strId = $this->GetJqControlId();
 			$jqOptions = $this->makeJqOptions();
-			if (empty($jqOptions)) {
-				QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction());
+			$strFunc = $this->getJqSetupFunction();
+
+			if ($strId !== $this->ControlId && QApplication::$RequestMode == QRequestMode::Ajax) {
+				// If events are not attached to the actual object being drawn, then the old events will not get
+				// deleted during redraw. We delete the old events here. This must happen before any other event processing code.
+				QApplication::ExecuteControlCommand($strId, 'off', QJsPriority::High);
 			}
-			else {
-				QApplication::ExecuteControlCommand($this->getJqControlId(), $this->getJqSetupFunction(), $jqOptions);
+
+			// Attach the javascript widget to the html object
+			if (empty($jqOptions)) {
+				QApplication::ExecuteControlCommand($strId, $strFunc, QJsPriority::High);
+			} else {
+				QApplication::ExecuteControlCommand($strId, $strFunc, $jqOptions, QJsPriority::High);
 			}
 
 			return parent::GetEndScript();
