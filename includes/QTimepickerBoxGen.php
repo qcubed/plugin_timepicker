@@ -42,7 +42,7 @@
 	*/
 	namespace QCubed\Plugin;
 	use \QTextBox, \QType, \QApplication, \QInvalidCastException,
-		\QCallerException, \QModelConnectorParam;
+		\QCallerException, \QModelConnectorParam, \QJsPriority;
 	
 	class QTimepickerBoxGen extends QTextBox	{
 		/** @var boolean */
