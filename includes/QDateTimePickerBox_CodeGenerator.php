@@ -35,7 +35,7 @@ class QDateTimePickerBox_CodeGenerator extends \QControl_CodeGenerator {
 	 * @param mixed $objColumn
 	 * @return string
 	 */
-	public function ConnectorCreate(\QCodeGenBase $objCodeGen, \QTable $objTable, $objColumn) {
+	public function ConnectorCreate(\QCodeGenBase $objCodeGen, \QSqlTable $objTable, $objColumn) {
 		$strControlVarName = $objCodeGen->ModelConnectorVariableName($objColumn);
 		$strLabelName = addslashes(QCodeGen::ModelConnectorControlName($objColumn));
 
@@ -102,7 +102,7 @@ TMPL;
 	 * @param boolean 			$blnInit Is initializing a new control verses loading a previously created control
 	 * @return string
 	 */
-	public function ConnectorRefresh(\QCodeGenBase $objCodeGen, \QTable $objTable, $objColumn, $blnInit = false) {
+	public function ConnectorRefresh(\QCodeGenBase $objCodeGen, \QSqlTable $objTable, $objColumn, $blnInit = false) {
 		$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 		$strPropName = $objCodeGen->ModelConnectorPropertyName($objColumn);
 		$strControlVarName = static::VarName($strPropName);
@@ -122,7 +122,7 @@ TMPL;
 	 * @param QColumn|\QReverseReference $objColumn
 	 * @return string
 	 */
-	public function ConnectorUpdate(\QCodeGenBase $objCodeGen, \QTable $objTable, $objColumn) {
+	public function ConnectorUpdate(\QCodeGenBase $objCodeGen, \QSqlTable $objTable, $objColumn) {
 		$strObjectName = $objCodeGen->ModelVariableName($objTable->Name);
 		$strPropName = $objCodeGen->ModelConnectorPropertyName($objColumn);
 		$strControlVarName = static::VarName($strPropName);
